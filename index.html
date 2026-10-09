@@ -6,7 +6,7 @@
 <title>Raspored rada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <script>
 /* =====================================================================
    POSTAVKE: adrese objavljenih listova Google tablice (format CSV).
@@ -155,7 +155,7 @@ table.teh .daystart{border-left:3px solid var(--ink)}
 <body>
 <div class="wrap">
   <div class="top">
-    <h1>Raspored<small id="subtitle">&nbsp;</small></h1>
+    <h1>Raspored rada<small id="subtitle">&nbsp;</small></h1>
   </div>
   <div id="notice"></div>
   <div id="app"><p class="status">Učitavam raspored…</p></div>
@@ -388,7 +388,7 @@ function codeLegend(codes){
 function smjeneDay(i){
   const S=D.smjene; if(!S) return D.has.smjene?card("p-smj","Smjene","",notYet):"";
   if(i===5) return card("p-smj","Smjene","Subota",
-    S.saturday.length?`<ul class="plain">${S.saturday.map(n=>`<li class="${nameCls(n)}">${esc(n)}</li>`).join("")}</ul>`:`<p class="status">Nema upisanih djelatnika.</p>`);
+    S.saturday.length?`<ul class="plain">${S.saturday.map(n=>`<li class="${nameCls(n)}">${fmt(n)}</li>`).join("")}</ul>`:`<p class="status">Nema upisanih djelatnika.</p>`);
   let body="";
   S.sections.forEach(sec=>{
     const groups=[];
@@ -435,8 +435,8 @@ function tehTable(days,now,wide){
   return h+codeLegend(used)+(T.notes.length?`<p class="note">${T.notes.map(esc).join("<br>")}</p>`:"");
 }
 function tehDay(i,now){
-  if(i>4) return ""; if(!D.teh) return D.has.teh?card("p-teh","Tehničari","Dodatni poslovi",notYet):"";
-  return card("p-teh","Tehničari","Dodatni poslovi",tehTable([i],now,false));
+  if(i>4) return ""; if(!D.teh) return D.has.teh?card("p-teh","Tehničari","",notYet):"";
+  return card("p-teh","Tehničari","",tehTable([i],now,false));
 }
 function dayView(now){
   const i=state.day;
@@ -457,7 +457,7 @@ function smjeneWeek(now){
       t+=`<tr class="${shift(sec.name)}"><th class="time">${esc(label)}</th>${r.cells.map((c,i)=>`<td class="${cls(i,c)}">${fmt(c)}</td>`).join("")}</tr>`;});
   });
   t+=`</tbody></table></div>`;
-  const sat=S.saturday.length?card("",`Subota${D.dates?`, ${dm(D.dates[5])}`:""}`,"",`<ul class="plain">${S.saturday.map(n=>`<li class="${nameCls(n)}">${esc(n)}</li>`).join("")}</ul>`):"";
+  const sat=S.saturday.length?card("",`Subota${D.dates?`, ${dm(D.dates[5])}`:""}`,"",`<ul class="plain">${S.saturday.map(n=>`<li class="${nameCls(n)}">${fmt(n)}</li>`).join("")}</ul>`):"";
   return `<div class="week-layout">${card("","Smjene","",t)}${sat}</div>`;
 }
 function revizijaWeek(now){
@@ -472,7 +472,7 @@ function revizijaWeek(now){
 }
 function weekView(now){
   if(state.tab==="revizija") return D.revizija?revizijaWeek(now):card("","Revizija","",notYet);
-  if(state.tab==="tehnicari") return D.teh?card("","Tehničari","Dodatni poslovi",tehTable([0,1,2,3,4],now,true)):card("","Tehničari","Dodatni poslovi",notYet);
+  if(state.tab==="tehnicari") return D.teh?card("","Tehničari","",tehTable([0,1,2,3,4],now,true)):card("","Tehničari","",notYet);
   return D.smjene?smjeneWeek(now):card("","Smjene","",notYet);
 }
 
@@ -489,7 +489,7 @@ function summary(now){
       days[i].push({src:"Smjene",what:isTime(r.term)?sec.name:(r.term?`${sec.name}, ${r.term}`:sec.name),when,
         key:firstMinute(when)??(/jutr/i.test(sec.name)?480.5:/dežur/i.test(r.term)?1190:840.5)});
     })));
-    S.saturday.forEach(v=>{if(matchName(v,p)) days[5].push({src:"Smjene",what:"Subota",when:"",key:0});});
+    if(S.saturday.some(v=>matchName(v,p))) days[5].push({src:"Smjene",what:"Subota",when:"",key:0});
   }
   if(R){
     [0,1,2,3,4].forEach(i=>{let run=null;
