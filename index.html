@@ -19,7 +19,8 @@ const CONFIG = {
   smjene:    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSR82LHc_-DRfDBcxv9cLL_ley7J1YQy5iSXQr9PYch1bDbVX2FpRzo_ku21PASgph48NhuLA2dEhnM/pub?gid=94036051&single=true&output=csv",
   revizija:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSR82LHc_-DRfDBcxv9cLL_ley7J1YQy5iSXQr9PYch1bDbVX2FpRzo_ku21PASgph48NhuLA2dEhnM/pub?gid=1241602340&single=true&output=csv",
   tehnicari: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSR82LHc_-DRfDBcxv9cLL_ley7J1YQy5iSXQr9PYch1bDbVX2FpRzo_ku21PASgph48NhuLA2dEhnM/pub?gid=1377788982&single=true&output=csv",
-  osobe:     "https://docs.google.com/spreadsheets/d/e/2PACX-1vSR82LHc_-DRfDBcxv9cLL_ley7J1YQy5iSXQr9PYch1bDbVX2FpRzo_ku21PASgph48NhuLA2dEhnM/pub?gid=1246943497&single=true&output=csv"
+  osobe:     "https://docs.google.com/spreadsheets/d/e/2PACX-1vSR82LHc_-DRfDBcxv9cLL_ley7J1YQy5iSXQr9PYch1bDbVX2FpRzo_ku21PASgph48NhuLA2dEhnM/pub?gid=1246943497&single=true&output=csv",
+  subote:    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSR82LHc_-DRfDBcxv9cLL_ley7J1YQy5iSXQr9PYch1bDbVX2FpRzo_ku21PASgph48NhuLA2dEhnM/pub?gid=616576401&single=true&output=csv"
 };
 </script>
 <style>
@@ -134,6 +135,17 @@ table.teh .daystart{border-left:3px solid var(--ink)}
 /* person filter */
 .filtering .busy:not(.hit){opacity:.28}
 .filtering .hit{outline:2px solid var(--ink);outline-offset:-2px}
+.satgrid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));align-items:start}
+.card.upnext{margin-bottom:1rem;max-width:420px}
+.satcard .plain li{padding:.42rem 1rem}
+.dates{list-style:none;margin:0;padding:.65rem 1rem;display:flex;flex-wrap:wrap;gap:.35rem;border-bottom:1px solid var(--line);background:var(--am)}
+.dates li{font-size:.85rem;font-weight:700;color:var(--am-strong);background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:.08rem .55rem}
+.dates li.past{opacity:.5;font-weight:400}
+.dates li.soon{background:var(--today);color:var(--paper);border-color:var(--today)}
+.dates.big{border-bottom:0;background:transparent;padding:.75rem 1rem;gap:.4rem}
+.dates.big li{font-size:.95rem;background:var(--am);border-color:transparent;padding:.2rem .7rem}
+.dates.big li .role{font-weight:400;opacity:.8}
+.filtering .satcard li.hit,.filtering .upnext li.hit{outline:0;font-weight:700}
 .summary{margin-bottom:1rem}
 .summary .panel-head{justify-content:space-between;flex-wrap:wrap}
 .summary .panel-head button{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:.3rem .7rem;cursor:pointer}
@@ -162,12 +174,12 @@ table.teh .daystart{border-left:3px solid var(--ink)}
 </div>
 
 <script>
-const DEMO = {"smjene": "Tjedan od,14.9.2026,,,,,,\n,,,,,,,\nOdjeljak,Termin,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak,Subota\nJutro,8–10,Milkica,Ruta,Milkica 8–11,Marijana P.,Ruta,Vesna Lovrić Cvjetković - I\nJutro,10–12,Damir,Kristina,Damir 11–14,Ruta,Marijana P.,Ivana Sabljak - P za sve\nJutro,12–14,Kristina,Damir,,Milkica,Damir,Maja Perković\nJutro,Informatori,,,,,,Marijana Oroz\nJutro,Pomoćni,,,,,,Marijana Pasarić - Č\nJutro,Čitaonica,,,,,,Marin Juraga - D\nPopodne,14–16,Vesna 14–17,Siniša,Siniša,Ivana S.,Marijana S.,Mirjana Marković\nPopodne,16–18,Siniša 17–20,Vesna,Vesna,Vesna > Damir,Vesna,\nPopodne,18–20,,Ivana S.,Marijana S.,Siniša > Marijana S.,Ivana S.,\nPopodne,Dežurni,Vesna,Vesna,Siniša,Ivana S. > Damir,Siniša,\nPopodne,Informatori,,,,,,\nPopodne,Pomoćni,,,,,,\nPopodne,Čitaonica,,,,,Ivana L. P.,\nČitaonica jutro,,Ruta,Marijana P.,Marijana O.,Marijana O.,Marijana O.,\nČitaonica jutro,,Kristina (P),Ruta (P) + tehn.,Iva (P),Marijana P. (P) + tehn.,Ruta (P) + tehn.,\nČitaonica popodne,,Ivana L. P.,Ivana L. P.,Ivana L. P.,Ivana L. P.,Ivana L. P.,\nČitaonica popodne,,Ivana S. (P) + tehn.,Ivana S. (P) + tehn.,Marijana S. (P) + tehn.,Marijana S. (P) + tehn.,Marijana S. (P) + tehn.,\n,,,,,,,\n,,,,,,,\nTjedan od,21.9.2026,,,,,,\n,,,,,,,\nOdjeljak,Termin,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak,Subota\nJutro,8–10,,,,,,\nJutro,10–12,,,,,,\nJutro,12–14,,,,,,\nJutro,Informatori,,,,,,\nJutro,Pomoćni,,,,,,\nJutro,Čitaonica,,,,,,\nPopodne,14–16,,,,,,\nPopodne,16–18,,,,,,\nPopodne,18–20,,,,,,\nPopodne,Dežurni,,,,,,\nPopodne,Informatori,,,,,,\nPopodne,Pomoćni,,,,,,\nPopodne,Čitaonica,,,,,,\nČitaonica jutro,,,,,,,\nČitaonica jutro,,,,,,,\nČitaonica popodne,,,,,,,\nČitaonica popodne,,,,,,,\n", "revizija": "Tjedan od,14.9.2026,,,,\nVrijeme,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak\n08:00,Kristina,,,Ruta,Marijana P.\n09:00,Damir,Kristina,Damir,Ruta,Marijana P.\n10:00,,,,Milkica,Damir\n11:00,Milkica,Damir,,Damir > Vesna,Kristina\n12:00,,Ruta,Milkica,Marijana P. + Kristina,Ruta\n13:00,,Ruta,Marijana P.,Marijana P. + Marijana S.,Ruta\n14:00,Ruta,Ruta + Marijana P.,Marijana S.,Marijana P. + Marijana S.,Ivana S.\n15:00,Siniša,Vesna,Marijana S.,Marijana S.,Siniša\n16:00,Vesna,,Marijana S.,Siniša,Vesna\n17:00,,,Ivana S.,Ivana S.,\n18:00,Ivana S.,Ivana S.,Siniša,Damir,Marijana S.\n19:00,,Siniša,Vesna,,Marijana S.\n,,,,,\n,,,,,\nTjedan od,21.9.2026,,,,\nVrijeme,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak\n08:00,,,,,\n09:00,,,,,\n10:00,,,,,\n11:00,,,,,\n12:00,,,,,\n13:00,,,,,\n14:00,,,,,\n15:00,,,,,\n16:00,,,,,\n17:00,,,,,\n18:00,,,,,\n19:00,,,,,\n", "tehnicari": "Tjedan od,14.9.2026,,,,,,,,,,,,,,,,,,,,,,,,\n,Ponedjeljak,,,,,Utorak,,,,,Srijeda,,,,,Četvrtak,,,,,Petak,,,,\nVrijeme,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo\n08:00,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n08:30,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n09:00,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n09:30,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n10:00,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n10:30,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n11:00,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n11:30,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n12:00,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n12:30,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n13:00,ZB,MO,KM-u,,ISM-D,KM,MO,MP-u,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,\n13:30,ZB,MO,KM-u,,ISM-D,KM,MO,MP-u,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,\n14:00,KM,MO,,,ISM-D,MP,MO,KM-u,,ISM-D,KM,MP,MK-U,,ISM-D,KM,MP,MK-U,,ISM-D,ISM,MP,,,\n14:30,KM,MO,,,ISM-D,MP,MO,KM-u,,ISM-D,KM,MP,MK-U,,ISM-D,KM,MP,MK-U,,ISM-D,ISM,MP,,,\n15:00,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n15:30,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n16:00,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n16:30,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n17:00,MO,KM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n17:30,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n18:00,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n18:30,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n19:00,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n19:30,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\nNapomena,\"Dostava pon, sri\",,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,\nTjedan od,21.9.2026,,,,,,,,,,,,,,,,,,,,,,,,\n,Ponedjeljak,,,,,Utorak,,,,,Srijeda,,,,,Četvrtak,,,,,Petak,,,,\nVrijeme,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo\n08:00,,,,,,,,,,,,,,,,,,,,,,,,,\n08:30,,,,,,,,,,,,,,,,,,,,,,,,,\n09:00,,,,,,,,,,,,,,,,,,,,,,,,,\n09:30,,,,,,,,,,,,,,,,,,,,,,,,,\n10:00,,,,,,,,,,,,,,,,,,,,,,,,,\n10:30,,,,,,,,,,,,,,,,,,,,,,,,,\n11:00,,,,,,,,,,,,,,,,,,,,,,,,,\n11:30,,,,,,,,,,,,,,,,,,,,,,,,,\n12:00,,,,,,,,,,,,,,,,,,,,,,,,,\n12:30,,,,,,,,,,,,,,,,,,,,,,,,,\n13:00,,,,,,,,,,,,,,,,,,,,,,,,,\n13:30,,,,,,,,,,,,,,,,,,,,,,,,,\n14:00,,,,,,,,,,,,,,,,,,,,,,,,,\n14:30,,,,,,,,,,,,,,,,,,,,,,,,,\n15:00,,,,,,,,,,,,,,,,,,,,,,,,,\n15:30,,,,,,,,,,,,,,,,,,,,,,,,,\n16:00,,,,,,,,,,,,,,,,,,,,,,,,,\n16:30,,,,,,,,,,,,,,,,,,,,,,,,,\n17:00,,,,,,,,,,,,,,,,,,,,,,,,,\n17:30,,,,,,,,,,,,,,,,,,,,,,,,,\n18:00,,,,,,,,,,,,,,,,,,,,,,,,,\n18:30,,,,,,,,,,,,,,,,,,,,,,,,,\n19:00,,,,,,,,,,,,,,,,,,,,,,,,,\n19:30,,,,,,,,,,,,,,,,,,,,,,,,,\nNapomena,\"Dostava pon, sri\",,,,,,,,,,,,,,,,,,,,,,,,\n", "osobe": "Kratica,Ime i prezime,Također piše kao,Boja\nSK,Sonja Kuzmić,,#F1C232\nKM,Ksenija Marton,,#6AA84F\nMP,Maja Perković,,#E06666\nISM,Ivan Salopek Mirosavljević,,#C27BA0\nIV,Ivana Vidović,,#4A86E8\nMK,Marijana Kolak,,#F6821F\nMO,Marijana Oroz,,#45B8C8\nILP,Ivana Ledić Preprotnik,,#B7B7B7\nZB,Zorica Bičanić,,#FF33CC\n"};
+const DEMO = {"smjene": "Tjedan od,14.9.2026,,,,,,\n,,,,,,,\nOdjeljak,Termin,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak,Subota\nJutro,8–10,Milkica,Ruta,Milkica 8–11,Marijana P.,Ruta,Vesna Lovrić Cvjetković - I\nJutro,10–12,Damir,Kristina,Damir 11–14,Ruta,Marijana P.,Ivana Sabljak - P za sve\nJutro,12–14,Kristina,Damir,,Milkica,Damir,Maja Perković\nJutro,Informatori,,,,,,Marijana Oroz\nJutro,Pomoćni,,,,,,Marijana Pasarić - Č\nJutro,Čitaonica,,,,,,Marin Juraga - D\nPopodne,14–16,Vesna 14–17,Siniša,Siniša,Ivana S.,Marijana S.,Mirjana Marković\nPopodne,16–18,Siniša 17–20,Vesna,Vesna,Vesna > Damir,Vesna,\nPopodne,18–20,,Ivana S.,Marijana S.,Siniša > Marijana S.,Ivana S.,\nPopodne,Dežurni,Vesna,Vesna,Siniša,Ivana S. > Damir,Siniša,\nPopodne,Informatori,,,,,,\nPopodne,Pomoćni,,,,,,\nPopodne,Čitaonica,,,,,Ivana L. P.,\nČitaonica jutro,,Ruta,Marijana P.,Marijana O.,Marijana O.,Marijana O.,\nČitaonica jutro,,Kristina (P),Ruta (P) + tehn.,Iva (P),Marijana P. (P) + tehn.,Ruta (P) + tehn.,\nČitaonica popodne,,Ivana L. P.,Ivana L. P.,Ivana L. P.,Ivana L. P.,Ivana L. P.,\nČitaonica popodne,,Ivana S. (P) + tehn.,Ivana S. (P) + tehn.,Marijana S. (P) + tehn.,Marijana S. (P) + tehn.,Marijana S. (P) + tehn.,\n,,,,,,,\n,,,,,,,\nTjedan od,21.9.2026,,,,,,\n,,,,,,,\nOdjeljak,Termin,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak,Subota\nJutro,8–10,,,,,,\nJutro,10–12,,,,,,\nJutro,12–14,,,,,,\nJutro,Informatori,,,,,,\nJutro,Pomoćni,,,,,,\nJutro,Čitaonica,,,,,,\nPopodne,14–16,,,,,,\nPopodne,16–18,,,,,,\nPopodne,18–20,,,,,,\nPopodne,Dežurni,,,,,,\nPopodne,Informatori,,,,,,\nPopodne,Pomoćni,,,,,,\nPopodne,Čitaonica,,,,,,\nČitaonica jutro,,,,,,,\nČitaonica jutro,,,,,,,\nČitaonica popodne,,,,,,,\nČitaonica popodne,,,,,,,\n", "revizija": "Tjedan od,14.9.2026,,,,\nVrijeme,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak\n08:00,Kristina,,,Ruta,Marijana P.\n09:00,Damir,Kristina,Damir,Ruta,Marijana P.\n10:00,,,,Milkica,Damir\n11:00,Milkica,Damir,,Damir > Vesna,Kristina\n12:00,,Ruta,Milkica,Marijana P. + Kristina,Ruta\n13:00,,Ruta,Marijana P.,Marijana P. + Marijana S.,Ruta\n14:00,Ruta,Ruta + Marijana P.,Marijana S.,Marijana P. + Marijana S.,Ivana S.\n15:00,Siniša,Vesna,Marijana S.,Marijana S.,Siniša\n16:00,Vesna,,Marijana S.,Siniša,Vesna\n17:00,,,Ivana S.,Ivana S.,\n18:00,Ivana S.,Ivana S.,Siniša,Damir,Marijana S.\n19:00,,Siniša,Vesna,,Marijana S.\n,,,,,\n,,,,,\nTjedan od,21.9.2026,,,,\nVrijeme,Ponedjeljak,Utorak,Srijeda,Četvrtak,Petak\n08:00,,,,,\n09:00,,,,,\n10:00,,,,,\n11:00,,,,,\n12:00,,,,,\n13:00,,,,,\n14:00,,,,,\n15:00,,,,,\n16:00,,,,,\n17:00,,,,,\n18:00,,,,,\n19:00,,,,,\n", "tehnicari": "Tjedan od,14.9.2026,,,,,,,,,,,,,,,,,,,,,,,,\n,Ponedjeljak,,,,,Utorak,,,,,Srijeda,,,,,Četvrtak,,,,,Petak,,,,\nVrijeme,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo\n08:00,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n08:30,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n09:00,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n09:30,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n10:00,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n10:30,ISM,ZB,,,,MO,KM,,,,KM,MK,,,,KM,MK,,,,KM,MK,,,\n11:00,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n11:30,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n12:00,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n12:30,ZB,ISM,,,,KM,MO,,,,MK,KM,,,,MK,KM,,,,MK,KM,,,\n13:00,ZB,MO,KM-u,,ISM-D,KM,MO,MP-u,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,\n13:30,ZB,MO,KM-u,,ISM-D,KM,MO,MP-u,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,ISM-D,MK,KM,,,\n14:00,KM,MO,,,ISM-D,MP,MO,KM-u,,ISM-D,KM,MP,MK-U,,ISM-D,KM,MP,MK-U,,ISM-D,ISM,MP,,,\n14:30,KM,MO,,,ISM-D,MP,MO,KM-u,,ISM-D,KM,MP,MK-U,,ISM-D,KM,MP,MK-U,,ISM-D,ISM,MP,,,\n15:00,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n15:30,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n16:00,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n16:30,KM,MO,,,,MP,ISM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n17:00,MO,KM,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,,ISM,MP,,,\n17:30,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n18:00,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n18:30,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n19:00,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\n19:30,MO,KM,,,,ISM,MP,,,,MP,ISM,,,,MP,ISM,,,,MP,ISM,,,\nNapomena,\"Dostava pon, sri\",,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,\nTjedan od,21.9.2026,,,,,,,,,,,,,,,,,,,,,,,,\n,Ponedjeljak,,,,,Utorak,,,,,Srijeda,,,,,Četvrtak,,,,,Petak,,,,\nVrijeme,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo,Pult,Noš.,Arhiv,Abec.,Ostalo\n08:00,,,,,,,,,,,,,,,,,,,,,,,,,\n08:30,,,,,,,,,,,,,,,,,,,,,,,,,\n09:00,,,,,,,,,,,,,,,,,,,,,,,,,\n09:30,,,,,,,,,,,,,,,,,,,,,,,,,\n10:00,,,,,,,,,,,,,,,,,,,,,,,,,\n10:30,,,,,,,,,,,,,,,,,,,,,,,,,\n11:00,,,,,,,,,,,,,,,,,,,,,,,,,\n11:30,,,,,,,,,,,,,,,,,,,,,,,,,\n12:00,,,,,,,,,,,,,,,,,,,,,,,,,\n12:30,,,,,,,,,,,,,,,,,,,,,,,,,\n13:00,,,,,,,,,,,,,,,,,,,,,,,,,\n13:30,,,,,,,,,,,,,,,,,,,,,,,,,\n14:00,,,,,,,,,,,,,,,,,,,,,,,,,\n14:30,,,,,,,,,,,,,,,,,,,,,,,,,\n15:00,,,,,,,,,,,,,,,,,,,,,,,,,\n15:30,,,,,,,,,,,,,,,,,,,,,,,,,\n16:00,,,,,,,,,,,,,,,,,,,,,,,,,\n16:30,,,,,,,,,,,,,,,,,,,,,,,,,\n17:00,,,,,,,,,,,,,,,,,,,,,,,,,\n17:30,,,,,,,,,,,,,,,,,,,,,,,,,\n18:00,,,,,,,,,,,,,,,,,,,,,,,,,\n18:30,,,,,,,,,,,,,,,,,,,,,,,,,\n19:00,,,,,,,,,,,,,,,,,,,,,,,,,\n19:30,,,,,,,,,,,,,,,,,,,,,,,,,\nNapomena,\"Dostava pon, sri\",,,,,,,,,,,,,,,,,,,,,,,,\n", "osobe": "Kratica,Ime i prezime,Također piše kao,Boja\nSK,Sonja Kuzmić,,#F1C232\nKM,Ksenija Marton,,#6AA84F\nMP,Maja Perković,,#E06666\nISM,Ivan Salopek Mirosavljević,,#C27BA0\nIV,Ivana Vidović,,#4A86E8\nMK,Marijana Kolak,,#F6821F\nMO,Marijana Oroz,,#45B8C8\nILP,Ivana Ledić Preprotnik,,#B7B7B7\nZB,Zorica Bičanić,,#FF33CC\n", "subote": "RASPORED RADNIH SUBOTA,\nRujan – prosinac 2026.,\nDatum,Djelatnici\n12.9.2026.,Ruta Crnoja - I\n10.10.2026.,Milkica Ursa - Č\n14.11.2026.,Ivana Vidović\n12.12.2026.,Zora Bićanić\n,Marija Žurić\n,Marijana Soldo - D\n,Valentina Lelas\n,\n19.9.2026.,Vesna Lovrić Cvjetković - I\n17.10.2026.,Ivana Sabljak\n21.11.2026.,Maja Perković\n19.12.2026.,Marijana Oroz\n,Marijana Pasarić - Č\n,Marin Juraga - D\n,Dijana Babić Martinović\n,\n26.9.2026.,Siniša Nikolić - I\n24.10.2026.,Ivana Ledić Preprotnik - Č\n28.11.2026.,Ivan Salopek Mirosavljević\n,Ksenija Marton\n,Sonja Kuzmić\n,Iva Džambaski - D\n,Ana Golubić\n,\n5.9.2026.,Kristina Kalanj - I\n3.10.2026.,Damir Sablić - Č\n7.11.2026.,Maja Marić\n5.12.2026.,Sabina Sarić\n,Mirjana Marković\n,Silvija Zec - D\n,Ivanka Musić Arambašić\n"};
 
 const DAY_NAMES=["Ponedjeljak","Utorak","Srijeda","Četvrtak","Petak","Subota"];
 const DAY_SHORT=["Pon","Uto","Sri","Čet","Pet","Sub"];
 const MONTHS_GEN=["siječnja","veljače","ožujka","travnja","svibnja","lipnja","srpnja","kolovoza","rujna","listopada","studenoga","prosinca"];
-const LABEL={smjene:"Smjene",revizija:"Revizija",tehnicari:"Tehničari",osobe:"Osobe"};
+const LABEL={smjene:"Smjene",revizija:"Revizija",tehnicari:"Tehničari",osobe:"Osobe",subote:"Subote"};
 const PALETTE=["#8fb3f5","#f0b27a","#9ccc65","#ce93d8","#4dd0e1","#ffb74d","#e57373","#aed581"];
 const $app=document.getElementById("app");
 const state={view:"dan",day:0,tab:"smjene",person:"",week:""};
@@ -202,6 +214,9 @@ function parseDate(s){
 }
 const addDays=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
 const dm=d=>`${d.getDate()}. ${d.getMonth()+1}.`;
+const dmy=d=>`${d.getDate()}. ${d.getMonth()+1}. ${d.getFullYear()}.`;
+const longDate=d=>`${d.getDate()}. ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}.`;
+const midnight=()=>{const t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate());};
 const dayIndex=name=>{const n=norm(name); if(!n) return -1; return DAY_NAMES.findIndex(d=>n===norm(d)||n.startsWith(norm(d).slice(0,3)));};
 const stepOf=slots=>slots.length>1?slots[1].t-slots[0].t:60;
 function firstMinute(s){const m=(s||"").match(/(\d{1,2})(?:[:.](\d{2}))?/);return m?(+m[1])*60+(+(m[2]||0)):null;}
@@ -304,6 +319,26 @@ function parseOsobe(rows){
   }));
 }
 
+function parseSubote(rows){
+  const h=rows.findIndex(r=>/^datum/i.test(r[0]||""));
+  const groups=[];let cur=null;
+  rows.slice(h>=0?h+1:0).forEach(r=>{
+    const a=(r[0]||"").trim(),b=(r[1]||"").trim();
+    if(!a&&!b){cur=null;return;}
+    const d=parseDate(a);
+    if(!d&&!b) return;
+    if(!cur){cur={dates:[],people:[]};groups.push(cur);}
+    if(d) cur.dates.push(d);
+    if(b) cur.people.push(b);
+  });
+  const clean=groups.filter(g=>g.dates.length&&g.people.length);
+  if(!clean.length) throw new Error("List Subote: nije pronađena nijedna radna subota (datum u stupcu A, ime u stupcu B).");
+  const byDate=new Map(),all=[];
+  clean.forEach((g,gi)=>g.dates.forEach(d=>{const e={date:d,people:g.people,gi};byDate.set(keyOf(d),e);all.push(e);}));
+  all.sort((x,y)=>x.date-y.date);
+  return {groups:clean,byDate,all,range:{from:all[0].date,to:all[all.length-1].date}};
+}
+
 /* ---------- people & matching ---------- */
 function nameTokens(v){
   if(!v) return [];
@@ -340,6 +375,7 @@ function buildPeople(){
     if(w.revizija) w.revizija.slots.forEach(s=>s.cells.forEach(addName));
     if(w.teh) w.teh.slots.forEach(s=>s.cells.forEach(day=>day.forEach(addCode)));
   });
+  if(D.subote) D.subote.groups.forEach(g=>g.people.forEach(addName));
   return people().sort((a,b)=>a.label.localeCompare(b.label,"hr"));
 }
 function colorFor(code){
@@ -384,11 +420,50 @@ function codeLegend(codes){
   return `<ul class="codes">${list.map(c=>{const col=colorFor(c);return `<li><b style="background:${col};color:${textOn(col)}">${esc(c)}</b>${esc(fullName(c)===c?"":fullName(c))}</li>`;}).join("")}</ul>`;
 }
 
+/* ---------- subote ---------- */
+function satState(){
+  const S=D.smjene;
+  if(S&&S.saturday.length) return {people:S.saturday,note:""};
+  const d=D.dates&&D.dates[5];
+  const e=D.subote&&d?D.subote.byDate.get(keyOf(d)):null;
+  if(e) return {people:e.people,note:""};
+  if(D.subote&&d&&d>=D.subote.range.from&&d<=D.subote.range.to) return {people:[],note:"Nije radna subota."};
+  return {people:[],note:"Nema upisanih djelatnika."};
+}
+const roleOf=v=>{const m=(v||"").match(/\s-\s*([^-]{1,30})$/);return m?m[1].trim():"";};
+function satHit(v){const p=person();return p&&matchName(v,p)?" hit":"";}
+function satPeople(list){
+  return `<ul class="plain">${list.map(n=>`<li class="${satHit(n)}">${fmt(n)}</li>`).join("")}</ul>`;
+}
+function suboteView(){
+  const SB=D.subote,today=midnight();
+  const up=SB.all.find(x=>x.date>=today);
+  let h="";
+  if(up) h+=`<section class="card upnext"><div class="panel-head"><h2>${up.date.getTime()===today.getTime()?"Danas je radna subota":"Sljedeća radna subota"}</h2><p>${longDate(up.date)}</p></div>${satPeople(up.people)}</section>`;
+  h+=`<div class="satgrid">${SB.groups.map(g=>{
+    const p=person(),hit=p&&g.people.some(v=>matchName(v,p));
+    return `<section class="card satcard busy${hit?" hit":""}">
+      <ul class="dates">${g.dates.map(d=>`<li class="${d<today?"past":""}${up&&d.getTime()===up.date.getTime()?" soon":""}">${dmy(d)}</li>`).join("")}</ul>
+      ${satPeople(g.people)}</section>`;}).join("")}</div>`;
+  return h;
+}
+function satSummary(){
+  const p=person(); if(!p) return "";
+  const today=midnight();
+  const mine=D.subote.all.filter(x=>x.people.some(v=>matchName(v,p)));
+  const body=mine.length
+    ?`<ul class="dates big">${mine.map(x=>{const r=roleOf(x.people.find(v=>matchName(v,p)));
+        return `<li class="${x.date<today?"past":""}">${longDate(x.date)}${r?` <span class="role">${esc(r)}</span>`:""}</li>`;}).join("")}</ul>`
+    :`<p class="status">Nema upisanih radnih subota.</p>`;
+  return `<section class="card summary"><div class="panel-head"><h2>${esc(p.label)}</h2><button data-act="clear" data-key="clear">Prikaži sve</button></div>${body}</section>`;
+}
+
 /* ---------- day view ---------- */
 function smjeneDay(i){
+  if(i===5){const st=satState();
+    return card("p-smj","Subota",st.people.length?"Radna subota":"",
+      st.people.length?satPeople(st.people):`<p class="status">${st.note}</p>`);}
   const S=D.smjene; if(!S) return D.has.smjene?card("p-smj","Smjene","",notYet):"";
-  if(i===5) return card("p-smj","Smjene","Subota",
-    S.saturday.length?`<ul class="plain">${S.saturday.map(n=>`<li class="${nameCls(n)}">${fmt(n)}</li>`).join("")}</ul>`:`<p class="status">Nema upisanih djelatnika.</p>`);
   let body="";
   S.sections.forEach(sec=>{
     const groups=[];
@@ -457,7 +532,8 @@ function smjeneWeek(now){
       t+=`<tr class="${shift(sec.name)}"><th class="time">${esc(label)}</th>${r.cells.map((c,i)=>`<td class="${cls(i,c)}">${fmt(c)}</td>`).join("")}</tr>`;});
   });
   t+=`</tbody></table></div>`;
-  const sat=S.saturday.length?card("",`Subota${D.dates?`, ${dm(D.dates[5])}`:""}`,"",`<ul class="plain">${S.saturday.map(n=>`<li class="${nameCls(n)}">${fmt(n)}</li>`).join("")}</ul>`):"";
+  const st=satState();
+  const sat=st.people.length?card("",`Subota, ${dm(D.dates[5])}`,"",satPeople(st.people)):"";
   return `<div class="week-layout">${card("","Smjene","",t)}${sat}</div>`;
 }
 function revizijaWeek(now){
@@ -489,8 +565,9 @@ function summary(now){
       days[i].push({src:"Smjene",what:isTime(r.term)?sec.name:(r.term?`${sec.name}, ${r.term}`:sec.name),when,
         key:firstMinute(when)??(/jutr/i.test(sec.name)?480.5:/dežur/i.test(r.term)?1190:840.5)});
     })));
-    if(S.saturday.some(v=>matchName(v,p))) days[5].push({src:"Smjene",what:"Subota",when:"",key:0});
   }
+  {const st=satState(),own=st.people.find(v=>matchName(v,p));
+   if(own){const r=roleOf(own);days[5].push({src:"Subote",what:r?`Radna subota — ${r}`:"Radna subota",when:"",key:0});}}
   if(R){
     [0,1,2,3,4].forEach(i=>{let run=null;
       R.slots.forEach(s=>{const hit=matchName(s.cells[i],p);
@@ -516,17 +593,19 @@ function summary(now){
 
 /* ---------- controls & render ---------- */
 function controls(now){
-  const hasSat=[...D.weeks.values()].some(w=>w.smjene&&w.smjene.saturday.length);
+  const hasSat=!!D.subote||[...D.weeks.values()].some(w=>w.smjene&&w.smjene.saturday.length);
   const opts=`<option value="">Svi djelatnici</option>`+D.people.map(p=>`<option value="${esc(p.key)}"${p.key===state.person?" selected":""}>${esc(p.label)}</option>`).join("");
   const wt=weekTabs();
   let h=`<div class="controls" style="margin-bottom:.8rem">
-    <div class="seg weeks" role="group" aria-label="Tjedan">${wt.map(w=>`<button data-act="week" data-v="${w.key}" data-key="w-${w.key}" aria-pressed="${w.key===state.week}">${w.label}<span>${dm(w.start)}–${dm(addDays(w.start,5))}</span></button>`).join("")}</div>
+    ${state.view==="subote"?"":`<div class="seg weeks" role="group" aria-label="Tjedan">${wt.map(w=>`<button data-act="week" data-v="${w.key}" data-key="w-${w.key}" aria-pressed="${w.key===state.week}">${w.label}<span>${dm(w.start)}–${dm(addDays(w.start,5))}</span></button>`).join("")}</div>`}
     <div class="seg" role="group" aria-label="Prikaz">
       <button data-act="view" data-v="dan" data-key="v-dan" aria-pressed="${state.view==="dan"}">Dan</button>
       <button data-act="view" data-v="tjedan" data-key="v-tj" aria-pressed="${state.view==="tjedan"}">Tjedan</button>
+      ${D.subote?`<button data-act="view" data-v="subote" data-key="v-sub" aria-pressed="${state.view==="subote"}">Subote</button>`:""}
     </div>
     <label class="person">Osoba <select data-key="person">${opts}</select></label>
   </div>`;
+  if(state.view==="subote") return h;
   if(state.view==="dan"){
     const n=hasSat?6:5;
     h+=`<div class="tabs" role="tablist" aria-label="Dan" style="grid-template-columns:repeat(${n},1fr)">${DAY_SHORT.slice(0,n).map((d,i)=>
@@ -542,12 +621,17 @@ function render(){
   if(!D) return;
   const focusKey=document.activeElement&&document.activeElement.dataset?document.activeElement.dataset.key:null;
   useWeek();
+  if(state.view==="subote"&&!D.subote) state.view="dan";
+  const sub=state.view==="subote";
+  if(sub){const r=D.subote.range;
+    document.getElementById("subtitle").textContent=
+      `Radne subote od ${r.from.getDate()}. ${MONTHS_GEN[r.from.getMonth()]}${r.from.getFullYear()===r.to.getFullYear()?"":" "+r.from.getFullYear()+"."} do ${longDate(r.to)}`;}
   const now=nowInfo();
   if(state.view==="tjedan"&&!{smjene:D.has.smjene,revizija:D.has.revizija,tehnicari:D.has.teh}[state.tab])
     state.tab=D.smjene?"smjene":D.revizija?"revizija":"tehnicari";
-  $app.innerHTML=controls(now)+summary(now)
-    +`<div class="${person()?"filtering":""}">${state.view==="dan"?dayView(now):weekView(now)}</div>`
-    +`<ul class="legend"><li><i class="sw am"></i> Jutarnja smjena</li><li><i class="sw pm"></i> Popodnevna smjena</li><li><s>Ime</s> zamjena</li></ul>`;
+  $app.innerHTML=controls(now)+(sub?satSummary():summary(now))
+    +`<div class="${person()?"filtering":""}">${sub?suboteView():state.view==="dan"?dayView(now):weekView(now)}</div>`
+    +(sub?"":`<ul class="legend"><li><i class="sw am"></i> Jutarnja smjena</li><li><i class="sw pm"></i> Popodnevna smjena</li><li><s>Ime</s> zamjena</li></ul>`);
   if(focusKey){const el=$app.querySelector(`[data-key="${focusKey}"]`); if(el) el.focus();}
 }
 function save(){try{localStorage.setItem("raspored-osoba",state.person);}catch(e){}}
@@ -578,7 +662,7 @@ async function getCSV(key){
 let firstLoad=true;
 async function load(){
   const demo=!Object.values(CONFIG).some(Boolean);
-  const keys=["smjene","revizija","tehnicari","osobe"];
+  const keys=["smjene","revizija","tehnicari","osobe","subote"];
   const results=await Promise.allSettled(keys.map(k=>demo?Promise.resolve(DEMO[k]):getCSV(k)));
   const errors=[],d={};
   const parse=(k,fn)=>{const r=results[keys.indexOf(k)];
@@ -603,6 +687,7 @@ async function load(){
   parseWeeks("revizija",parseRevizija,"revizija",hasRevizija);
   parseWeeks("tehnicari",parseTeh,"teh",hasTeh);
   d.osobe=parse("osobe",parseOsobe)||[];
+  d.subote=parse("subote",parseSubote);
   if(weeks.has("bez-datuma")){
     const loose=weeks.get("bez-datuma"); weeks.delete("bez-datuma");
     const target=[...weeks.keys()].sort()[0]||keyOf(currentMonday());
